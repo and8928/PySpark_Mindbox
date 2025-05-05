@@ -3,11 +3,11 @@ from pyspark.sql import SparkSession, DataFrame
 
 def get_all_products_category(product_data: DataFrame, category_data: DataFrame, product_category_data: DataFrame):
     """
-    
-    :param product_data: 
-    :param category_data: 
-    :param product_category_data: 
-    :return: 
+    Вернет все пары «Имя продукта – Имя категории» и имена всех продуктов, у которых нет категорий.
+    :param product_data: таблица продуктов (0, 'book')
+    :param category_data: таблица категорий (100, 'drinks')
+    :param product_category_data: Таблица привязки продуктов к категориям.
+    :return: Таблица - имя продуктов и имя категории.
     """
     products_with_links = product_data.join(product_category_data,
                                             product_data.product_id == product_category_data.product_id,
@@ -71,12 +71,12 @@ if __name__ == "__main__":
             (103, 'eatable')
         ]
 
-        product_category_data = [  # Таблица приязки категорий к продуктам, один ко многим.
+        product_category_data = [  # Таблица привязки категорий к продуктам, один ко многим.
             (1, 100),
             (2, 100),
             (3, 100),
             (4, 101), (4, 103),
-            (5, 102), (4, 103),
+            (5, 102), (5, 103),
         ]
 
         # Создаем DataFrame'ы
@@ -97,5 +97,5 @@ if __name__ == "__main__":
         spark.stop()
 
     finally:
-        if spark is not None and spark.active:
+        if spark is not None and spark.active:  #Проверяем, закрылось ли соединение
             spark.stop()
